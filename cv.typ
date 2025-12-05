@@ -6,6 +6,7 @@
 #import "./utils/injection.typ": inject
 #import "./utils/styles.typ": awesomeColors, hBar, latinFontList, latinHeaderFont, regularColors, setAccentColor
 #import "./utils/lang.typ": defaultDateWidth, isNonLatin
+#import "@preview/to-stuff:0.3.1" as to
 
 /// Insert the header section of the CV.
 ///
@@ -33,6 +34,7 @@
   let headerQuote = metadata.lang.at(metadata.language).at("header_quote", default: none)
   let headerRole = metadata.lang.at(metadata.language).at("header_role", default: none)
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
+  let headerRoleSize = to.length(metadata.layout.at("header_role_size", default: "26pt"))
   let profilePhotoRadius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
   let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
   let accentColor = setAccentColor(awesomeColors, metadata)
@@ -55,7 +57,7 @@
       font: headerFont,
       size: 32pt,
       weight: "light",
-      fill: regularColors.darkgray,
+      fill: regularColors.subtlegray,
       str,
     )
   }
@@ -63,7 +65,7 @@
     text(font: headerFont, size: 32pt, weight: "bold", str)
   }
   let headerInfoStyle(str) = {
-    text(size: headerInfoFontSize, fill: accentColor, str)
+    text(size: headerInfoFontSize, fill: regularColors.darkgray, str)
   }
   let headerQuoteStyle(str) = {
     text(size: 10pt, weight: "medium", style: "italic", fill: accentColor, eval(str, mode: "markup"))
@@ -84,11 +86,17 @@
       extraInfo: "",
     )
     let n = 1
+    let skipHbar = false
     for (k, v) in personalInfo {
       // A dirty trick to add linebreaks with "linebreak" as key in personalInfo
       if k == "linebreak" {
         n = 0
         linebreak()
+        continue
+      }
+      if k == "skipHbar" {
+        skipHbar = true
+        n += 1
         continue
       }
       if k.contains("custom") {
@@ -135,10 +143,11 @@
         })
       }
       // Adds hBar
-      if n != personalInfo.len() {
+      if n != personalInfo.len() and not skipHbar {
         hBar()
       }
       n = n + 1
+      skipHbar = false
     }
   }
 
@@ -147,7 +156,7 @@
     inset: 0pt,
     stroke: 0pt,
     row-gutter: 6mm,
-    [#text(font: headerFont, size: 26pt, weight: "bold", headerRole, fill: luma(20))],
+    [#text(font: headerFont, size: headerRoleSize, weight: "bold", headerRole, fill: luma(20))],
     [#headerInfoStyle(makeHeaderInfo())],
     ..if headerQuote != none { ([#headerQuoteStyle(headerQuote)],) },
   )
@@ -327,7 +336,7 @@
   }
   let entryDescriptionStyle(str) = {
     text(
-      fill: regularColors.lightgray,
+      fill: rgb("#464e56"),
       {
         v(beforeEntryDescriptionSkip)
         str
@@ -459,16 +468,15 @@
   date: "Date",
   description: "Description",
   logo: "",
+  teamSize: none,
   tags: (),
   metadata: metadata,
   awesomeColors: awesomeColors,
+  beforeEntryDescriptionSkip: length,
 ) = {
   let accentColor = setAccentColor(awesomeColors, metadata)
   let beforeEntrySkip = eval(
     metadata.layout.at("before_entry_skip", default: 1pt),
-  )
-  let beforeEntryDescriptionSkip = eval(
-    metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
@@ -571,7 +579,7 @@
         stroke: 0pt,
         row-gutter: 6pt,
         align: auto,
-        { entryA1Style(title) },
+        { entryA1Style(title) + teamSize },
       ),
     ),
     entryB2Style(entryDatesStyle(date)),
@@ -821,22 +829,25 @@
 /// - type (str): The type of the skill. It is displayed on the left side.
 /// - info (str | content): The information about the skill. It is displayed on the right side. Items can be separated by `#hbar()`.
 /// -> content
-#let cvSkill(type: "Type", info: "Info") = {
+#let cvSkill(type: "Type", info: "Info", skillTypeWidth: length, leadingSpace: length) = {
   let skillTypeStyle(str) = {
     align(right, text(size: 10pt, weight: "bold", str))
   }
   let skillInfoStyle(str) = {
-    text(str)
+    par(
+      text(str),
+      leading: leadingSpace,
+    )
   }
 
   table(
-    columns: (30%, 1fr),
+    columns: (skillTypeWidth, 1fr),
     inset: 0pt,
     column-gutter: 10pt,
     stroke: 0pt,
     skillTypeStyle(type), skillInfoStyle(info),
   )
-  v(-6pt)
+  v(-4pt)
 }
 
 /// Add a skill with a level to the CV.

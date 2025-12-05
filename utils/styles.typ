@@ -1,5 +1,3 @@
-#let hBar() = [#h(5pt) | #h(5pt)]
-
 #let latinFontList = (
   "Source Sans 3",
   "Linux Libertine",
@@ -8,7 +6,7 @@
   "Font Awesome 6 Free",
 )
 
-#let latinHeaderFont = ("Roboto")
+#let latinHeaderFont = "Roboto"
 
 #let awesomeColors = (
   skyblue: rgb("#0395DE"),
@@ -20,7 +18,7 @@
 
 #let regularColors = (
   subtlegray: rgb("#ededee"),
-  lightgray: rgb("#343a40"),
+  lightgray: rgb("#56606b"),
   darkgray: rgb("#212529"),
 )
 
@@ -34,8 +32,10 @@
   }
 }
 
+#let hBar() = text([#h(5pt) *|* #h(5pt)],fill: black)
+
 /// Overwrite the default fonts if the metadata has custom font values
-/// 
+///
 /// - metadata (array): the metadata object
 /// - latinFontList (array): the default list of latin fonts
 /// - latinHeaderFont (string): the default header font
