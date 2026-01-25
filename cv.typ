@@ -36,6 +36,7 @@
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
   let headerRoleSize = to.length(metadata.layout.at("header_role_size", default: "26pt"))
   let profilePhotoRadius = eval(metadata.layout.header.at("profile_photo_radius", default: "50%"))
+  let profilePhotoHeight = to.length(metadata.layout.header.at("profile_photo_height", default: "3.6cm"))
   let headerInfoFontSize = eval(metadata.layout.header.at("info_font_size", default: "10pt"))
   let accentColor = setAccentColor(awesomeColors, metadata)
   let nonLatinName = ""
@@ -162,11 +163,11 @@
   )
 
   let makeHeaderPhotoSection() = {
-    set image(height: 3.6cm)
+    set image(height: profilePhotoHeight)
     if displayProfilePhoto {
       box(profilePhoto, radius: profilePhotoRadius, clip: true)
     } else {
-      v(3.6cm)
+      v(profilePhotoHeight)
     }
   }
 
@@ -182,7 +183,7 @@
   if hasPhoto {
     makeHeader(
       (makeHeaderNameSection(), makeHeaderPhotoSection()),
-      (auto, 20%),
+      (auto, auto),
       align,
     )
   } else {
