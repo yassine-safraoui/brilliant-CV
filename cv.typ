@@ -835,10 +835,7 @@
     align(right, text(size: 10pt, weight: "bold", str))
   }
   let skillInfoStyle(str) = {
-    par(
-      text(str),
-      leading: leadingSpace,
-    )
+    text(str)
   }
 
   table(
@@ -848,7 +845,7 @@
     stroke: 0pt,
     skillTypeStyle(type), skillInfoStyle(info),
   )
-  v(-4pt)
+  v(-4pt + leadingSpace)
 }
 
 /// Add a skill with a level to the CV.
