@@ -304,6 +304,7 @@
   let beforeEntryDescriptionSkip = eval(
     metadata.layout.at("before_entry_description_skip", default: 1pt),
   )
+  let descriptionLeadingSpace = metadata.layout.at("description_leading_space", default: 0.65em)
   let dateWidth = metadata.layout.at("date_width", default: none)
   let dateWidth = if dateWidth == none {
     defaultDateWidth(metadata.language)
@@ -335,7 +336,8 @@
       #dates
     ]
   }
-  let entryDescriptionStyle(str) = {
+  let entryDescriptionStyle(str, leading) = {
+    set par(leading: leading)
     text(
       fill: rgb("#464e56"),
       {
@@ -447,7 +449,7 @@
       ),
     ),
   )
-  entryDescriptionStyle(description)
+  entryDescriptionStyle(description, descriptionLeadingSpace)
   v(-2pt)
   entryTagListStyle(tags)
 }
