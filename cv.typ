@@ -32,6 +32,9 @@
   let firstName = metadata.personal.first_name
   let lastName = metadata.personal.last_name
   let headerQuote = metadata.lang.at(metadata.language).at("header_quote", default: none)
+  if headerQuote == "" {
+    headerQuote = none
+  }
   let headerRole = metadata.lang.at(metadata.language).at("header_role", default: none)
   let displayProfilePhoto = metadata.layout.header.display_profile_photo
   let headerRoleSize = to.length(metadata.layout.at("header_role_size", default: "26pt"))
