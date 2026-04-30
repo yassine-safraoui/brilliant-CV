@@ -474,7 +474,6 @@
   date: "Date",
   description: "Description",
   logo: "",
-  teamSize: none,
   tags: (),
   metadata: metadata,
   awesomeColors: awesomeColors,
@@ -585,7 +584,7 @@
         stroke: 0pt,
         row-gutter: 6pt,
         align: auto,
-        { entryA1Style(title) + teamSize },
+        entryA1Style(title)
       ),
     ),
     entryB2Style(entryDatesStyle(date)),
